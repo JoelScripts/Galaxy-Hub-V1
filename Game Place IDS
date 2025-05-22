@@ -2,4 +2,6 @@ if game.PlaceId == 16447934574 then
 loadstring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source",true))()
 elseif game.PlaceId == 126884695634066 then
 loadstring(game:HttpGet("https://raw.githubusercontent.com/JoelScripts/Galaxy-Hub-V1/refs/heads/main/Grow%20A%20Garden",true))()
+elseif game.PlaceId == 85896571713843 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JoelScripts/Galaxy-Hub-V1/refs/heads/main/Bubble%20Gum%20Simulator%20infinity",true))()
 end
