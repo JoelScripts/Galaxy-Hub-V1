@@ -1,0 +1,99 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Galaxy Hub V1",
+   Icon = 0,
+   LoadingTitle = "Loading Galaxy Hub",
+   LoadingSubtitle = "by Joel",
+   Theme = "Default",
+   DisableRayfieldPrompts = false,
+   DisableBuildWarnings = false,
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = nil,
+      FileName = "Galaxy Hub"
+   },
+   Discord = {
+      Enabled = true,
+      Invite = "p8yjHKzYgA",
+      RememberJoins = true
+   },
+   KeySystem = false,
+   KeySettings = {
+      Title = "Galaxy Hub",
+      Subtitle = "Key System",
+      Note = "No method of obtaining the key is provided",
+      FileName = "Key",
+      SaveKey = true,
+      GrabKeyFromSite = false,
+      Key = {"Hello"}
+   }
+})
+
+-------------------- TABS -----------------------------
+
+local Tab1 = Window:CreateTab("AutoFarm", 4483362458)
+local Tab2 = Window:CreateTab("Pets", 4483362458)
+
+------------------ TOGGLES --------------------
+
+local Label = Tab1:CreateLabel("Please Note: You Need to be near A Sell Point for the script to work", 4483362458, Color3.fromRGB(255, 255, 255), false)
+
+local runningToggles = {}
+
+local function createBubbleToggle(tab, name, action, flag)
+    tab:CreateToggle({
+        Name = name,
+        CurrentValue = false,
+        Flag = flag,
+        Callback = function(Value)
+            runningToggles[flag] = Value -- Track toggle state globally
+
+            if Value then
+                task.spawn(function()
+                    while runningToggles[flag] do
+                        local remoteEvent = game:GetService("ReplicatedStorage"):WaitForChild("Shared"):WaitForChild("Framework"):WaitForChild("Network"):WaitForChild("Remote"):WaitForChild("RemoteEvent")
+                        if remoteEvent then
+                            remoteEvent:FireServer(action)
+                        else
+                            print("RemoteEvent not found!")
+                        end
+                        task.wait(0.1) -- Prevent excessive requests
+                    end
+                end)
+            end
+        end,
+    })
+end
+
+createBubbleToggle(Tab1, "Auto Blow Bubble", "BlowBubble", "Toggle_BlowBubble")
+createBubbleToggle(Tab1, "Sell Bubble", "SellBubble", "Toggle_SellBubble")
+
+local Label = Tab2:CreateLabel("Please Note: You Need to be near the egg for the script to work", 4483362458, Color3.fromRGB(255, 255, 255), false)
+
+local function createAutoHatchToggle(tab, name, eggName, flag)
+   tab:CreateToggle({
+       Name = name,
+       CurrentValue = false,
+       Flag = flag,
+       Callback = function(Value)
+           runningToggles[flag] = Value -- Track the toggle state globally
+
+           if Value then
+               task.spawn(function()
+                   while runningToggles[flag] do
+                       game:GetService("ReplicatedStorage"):WaitForChild("Shared")
+                           :WaitForChild("Framework"):WaitForChild("Network")
+                           :WaitForChild("Remote"):WaitForChild("RemoteEvent")
+                           :FireServer("HatchEgg", eggName, 1)
+                       task.wait(0.1) -- Prevent excessive requests
+                   end
+               end)
+           end
+       end,
+   })
+end
+
+createAutoHatchToggle(Tab2, "Auto Open Hatch Egg", "Iceshard Egg", "Toggle_HatchEgg")
+createAutoHatchToggle(Tab2, "Auto Open Spotted Egg", "Spotted Egg", "Toggle_SpottedEgg")
+createAutoHatchToggle(Tab2, "Auto Open Common Egg", "Common Egg", "Toggle_CommonEgg")
