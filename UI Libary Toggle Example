@@ -1,22 +1,22 @@
-local running = false
+local RunService = game:GetService("RunService")
+local connection
 
 local Toggle = Tab1:CreateToggle({
    Name = "Toggle Example",
    CurrentValue = false,
    Flag = "Toggle1",
    Callback = function(Value)
-       running = Value -- Update the running state
-
-       if running then
-           -- Start a new task for firing the event
-           task.spawn(function()
-               while running do
-                   local args = { "Blueberry" }
-                   game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("BuySeedStock"):FireServer(unpack(args))
-
-                   task.wait(1) -- Prevent excessive server requests
-               end
+       if Value then
+           -- Start firing the event every frame
+           connection = RunService.Heartbeat:Connect(function()
+            [SCRIPT HERE]
            end)
+       else
+           -- Immediately disconnect the event firing when toggle is disabled
+           if connection then
+               connection:Disconnect()
+               connection = nil
+           end
        end
    end,
 })
